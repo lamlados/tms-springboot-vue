@@ -6,7 +6,7 @@
 
     <div class="right-menu">
       <div class="status-container">
-        测试项目：{{ itemTitle }}
+        测试项目： 多源监控管理系统
         当前用户：{{ name }}
       </div>
       <div class="item-switch-container">
@@ -31,7 +31,7 @@
               首页
             </el-dropdown-item>
           </router-link>
-          <a target="_blank" href="https://github.com/PanJiaChen/vue-admin-template/">
+          <a target="_blank" href="https://github.com/lamlados/tms-springboot-vue">
             <el-dropdown-item>Github</el-dropdown-item>
           </a>
           <el-dropdown-item divided @click.native="logout">
@@ -59,13 +59,14 @@ export default {
       Avatar: Avatar,
       options: [],
       value: '',
-      itemTitle: ''
+      testItem: ''
     }
   },
   computed: {
     ...mapGetters([
       'sidebar',
-      'name'
+      'name',
+      'userinfo'
     ])
   },
   created() {
@@ -97,8 +98,6 @@ export default {
       })
     },
     switchItem() {
-      var vm = this
-      vm.options
     }
 
   }

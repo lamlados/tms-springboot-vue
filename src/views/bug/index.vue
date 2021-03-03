@@ -4,12 +4,12 @@
       <el-col>
         <!--工具栏-->
         <div class="head-container">
-          <div>
+          <div v-show="showSearch">
             <!-- 搜索 -->
             <el-input
               clearable
               size="small"
-              placeholder="输入用例标识搜索"
+              placeholder="输入问题标识搜索"
               style="width: 200px; margin-bottom: 10px"
               class="filter-item"
             />
@@ -22,23 +22,6 @@
             <span class="crud-opts-left">
               <!--左侧插槽-->
               <slot name="left" />
-              <el-button
-                size="mini"
-                type="primary"
-                plain
-                icon="el-icon-plus"
-                @click="handleAdd"
-              >
-                新增
-              </el-button>
-              <el-button
-                size="mini"
-                type="success"
-                plain
-                icon="el-icon-edit"
-              >
-                修改
-              </el-button>
               <el-button
                 type="danger"
                 plain
@@ -58,37 +41,7 @@
               <!--右侧-->
               <slot name="right" />
             </span>
-            <el-button-group class="crud-opts-right" style="float: right">
-              <el-button
-                size="mini"
-                plain
-                type="info"
-                icon="el-icon-search"
-              />
-              <el-button
-                size="mini"
-                icon="el-icon-refresh"
-              />
-              <el-popover
-                placement="bottom-end"
-                width="150"
-                trigger="click"
-              >
-                <el-button
-                  slot="reference"
-                  size="mini"
-                  icon="el-icon-s-grid"
-                >
-                  <i
-                    class="fa fa-caret-down"
-                    aria-hidden="true"
-                  />
-                </el-button>
-                <el-checkbox>
-                  全选
-                </el-checkbox>
-              </el-popover>
-            </el-button-group>
+            <RightToolbar :show-search.sync="showSearch" @queryTable="fetchData" />
           </div>
         </div>
         <!--表单渲染-->
@@ -116,7 +69,7 @@
               <el-input />
             </el-form-item>
             <el-form-item label="备注" prop="comment">
-              <el-input type="textarea" placeholder="请输入内容"></el-input>
+              <el-input type="textarea" placeholder="请输入内容" />
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
@@ -137,49 +90,54 @@
               {{ scope.row.id }}
             </template>
           </el-table-column>
-          <el-table-column :show-overflow-tooltip="true" width="100" prop="caseMark" label="用例标识">
+          <el-table-column :show-overflow-tooltip="true" width="100" prop="problemMark" label="问题标识">
             <template slot-scope="scope">
               {{ scope.row.problemMark }}
             </template>
           </el-table-column>
-          <el-table-column :show-overflow-tooltip="true" width="100" prop="track" label="测试追踪">
+          <el-table-column :show-overflow-tooltip="true" width="100" prop="problemType" label="问题类别">
             <template slot-scope="scope">
-              {{ scope.row.testTrack }}
+              {{ scope.row.problemType }}
             </template>
           </el-table-column>
-          <el-table-column :show-overflow-tooltip="true" width="100" prop="method" label="测试方法">
+          <el-table-column :show-overflow-tooltip="true" width="100" prop="problemLevel" label="问题级别">
             <template slot-scope="scope">
-              {{ scope.row.testMethod }}
+              {{ scope.row.problemLevel }}
             </template>
           </el-table-column>
-          <el-table-column :show-overflow-tooltip="true" width="100" prop="testDescription" label="测试说明">
+          <el-table-column :show-overflow-tooltip="true" width="100" prop="problemDescription" label="问题说明">
             <template slot-scope="scope">
-              {{ scope.row.testDescription }}
+              {{ scope.row.problemDescription }}
             </template>
           </el-table-column>
-          <el-table-column :show-overflow-tooltip="true" width="100" prop="preCons" label="前提与约束">
+          <el-table-column :show-overflow-tooltip="true" width="100" prop="caseNumber" label="用例标识">
             <template slot-scope="scope">
-              {{ scope.row.premiseConstraint }}
+              {{ scope.row.caseNumber }}
             </template>
           </el-table-column>
-          <el-table-column :show-overflow-tooltip="true" width="100" prop="endCondition" label="终止条件">
+          <el-table-column :show-overflow-tooltip="true" width="120" prop="testVersion" label="测试版本">
             <template slot-scope="scope">
-              {{ scope.row.endCondition }}
+              {{ scope.row.testCaseTest.testVersion }}
             </template>
           </el-table-column>
-          <el-table-column :show-overflow-tooltip="true" width="120" prop="opDescription" label="输入及操作说明">
+          <el-table-column :show-overflow-tooltip="true" width="120" prop="testBy" label="测试人员">
             <template slot-scope="scope">
-              {{ scope.row.operatingDescription }}
+              {{ scope.row.testCaseTest.testBy }}
             </template>
           </el-table-column>
-          <el-table-column :show-overflow-tooltip="true" width="120" prop="expectedResult" label="期望测试结果">
+          <el-table-column :show-overflow-tooltip="true" width="120" prop="supervisedBy" label="监督人员">
             <template slot-scope="scope">
-              {{ scope.row.expectedResult }}
+              {{ scope.row.testCaseTest.supervisedBy }}
             </template>
           </el-table-column>
-          <el-table-column :show-overflow-tooltip="true" width="120" prop="criteria" label="评估准则">
+          <el-table-column :show-overflow-tooltip="true" width="120" prop="executionDate" label="执行日期">
             <template slot-scope="scope">
-              {{ scope.row.evaluationCriteria }}
+              {{ scope.row.testCaseTest.executionDate }}
+            </template>
+          </el-table-column>
+          <el-table-column :show-overflow-tooltip="true" width="120" prop="comment" label="备注">
+            <template slot-scope="scope">
+              {{ scope.row.comment }}
             </template>
           </el-table-column>
           <el-table-column
@@ -192,16 +150,8 @@
               <div
                 :data="scope"
               >
-                <el-button size="mini" type="primary" icon="el-icon-arrow-down" plain style="margin-right: 5px" />
-                <el-popover placement="top" width="180" trigger="manual">
-                  <p>msg</p>
-                  <div style="text-align: right; margin: 0">
-                    <el-button size="mini" type="text">取消</el-button>
-                    <el-button type="primary" size="mini">确定</el-button>
-                  </div>
-                  <el-button type="danger" icon="el-icon-delete" size="mini" />
-                </el-popover>
-                <el-button size="mini" type="danger" icon="el-icon-delete" plain />
+                <el-button size="mini" type="primary" icon="el-icon-edit" plain style="width: 44%;" />
+                <el-button size="mini" type="danger" icon="el-icon-delete" plain style="width: 44%;" />
               </div>
             </template>
           </el-table-column>
@@ -216,11 +166,14 @@
 import Pagination from '@/components/Pagination/index.vue'
 import qs from 'qs'
 import { getToken } from '@/utils/auth'
+import RightToolbar from '@/components/RightToolbar'
 
 export default {
-  components: { Pagination },
+  components: { RightToolbar, Pagination },
   data() {
     return {
+      // 显示搜索条件
+      showSearch: true,
       addFormVisible: false,
       total: 0,
       listQuery: {
@@ -235,19 +188,10 @@ export default {
       }
     }
   },
-  watch: {
-    filterText(val) {
-      this.$refs.tree2.filter(val)
-    }
-  },
   created() {
     this.fetchData()
   },
   methods: {
-    filterNode(value, data) {
-      if (!value) return true
-      return data.label.indexOf(value) !== -1
-    },
     fetchData() {
       var vm = this
       this.axios({
@@ -274,3 +218,21 @@ export default {
   }
 }
 </script>
+
+<style>
+
+.el-table__body-wrapper::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: #DCDFE6;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: #909399;
+}
+</style>
