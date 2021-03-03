@@ -529,22 +529,22 @@ export default {
     handleProblem() {
       this.problemFormVisible = true
     },
-    // handleDelete() {
-    //   var vm = this
-    //   this.axios({
-    //     headers: {
-    //       'Authorization': getToken()
-    //     },
-    //     method: 'post',
-    //     url: 'http://localhost:8090/system/item/delete',
-    //     data: qs.stringify({
-    //       id: vm.scope.row.id
-    //     })
-    //   }).then(function(resp) {
-    //     vm.total = resp.data.data.total
-    //     vm.list = resp.data.data.list
-    //   })
-    // },
+    handleDelete(row) {
+      var vm = this
+      this.axios({
+        headers: {
+          'Authorization': getToken()
+        },
+        method: 'post',
+        url: 'http://localhost:8090/system/item/delete',
+        data: qs.stringify({
+          id: row.id
+        })
+      }).then(function(resp) {
+        vm.total = resp.data.data.total
+        vm.list = resp.data.data.list
+      })
+    },
     cancelForm() {
       this.addFormVisible = false
       this.executionFormVisible = false
