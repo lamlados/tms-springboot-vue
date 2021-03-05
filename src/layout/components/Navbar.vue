@@ -6,16 +6,16 @@
 
     <div class="right-menu">
       <div class="status-container">
-        测试项目： 多源监控管理系统
+        测试项目： {{ ongoingItem }}
         当前用户：{{ name }}
       </div>
       <div class="item-switch-container">
-        <el-select v-model="value" clearable placeholder="选择测试项目" style="margin-right: 5px" @click="fetchData">
+        <el-select v-model="testItem.value" clearable placeholder="选择测试项目" style="margin-right: 5px">
           <el-option
-            v-for="item in options"
-            :key="item"
-            :label="item"
-            :value="item"
+            v-for="item in testItem"
+            :key="item.value"
+            :label="item.label"
+            :value="item.label"
           />
         </el-select>
         <el-button @click="switchItem">切换</el-button>
@@ -57,29 +57,33 @@ export default {
   data() {
     return {
       Avatar: Avatar,
-      options: [],
-      value: '',
-      testItem: ''
+      options: []
     }
   },
   computed: {
     ...mapGetters([
       'sidebar',
       'name',
-      'userinfo'
+      'testItem',
+      'ongoingItem'
     ])
   },
   created() {
     this.fetchData()
+    // if (localStorage.getItem('store')) {
+    //   // replaceState替换数据 Object.assign合并对象
+    //   this.$store.replaceState(Object.assign({}, this.$store.state, JSON.parse(localStorage.getItem('store'))))
+    // }
+    // // 在页面刷新时将vuex里的信息保存到localStorage里，onbeforeunload在页面刷新前。
+    // window.addEventListener('beforeunload', () => {
+    //   localStorage.setItem('store', JSON.stringify(this.$store.state))
+    //   console.log(JSON.stringify(this.$store.state))
+    // })
   },
   methods: {
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
     },
-    // async logout() {
-    //   await this.$store.dispatch('LogOut')
-    //   this.$router.push(`/login?redirect=${this.$route.fullPath}`)
-    // },
     logout() {
       this.$store.dispatch('LogOut').then(() => {
         location.reload() // 为了重新实例化vue-router对象 避免bug
@@ -98,6 +102,7 @@ export default {
       })
     },
     switchItem() {
+      location.reload()
     }
 
   }

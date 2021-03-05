@@ -1,13 +1,31 @@
 import { login, logout, getUserInfo } from '@/api/user'
 import { getToken, getHeader, setToken, removeToken } from '@/utils/auth'
-// import Cookies from 'js-cookie'
 
 const user = {
   state: {
     token: getToken(),
     header: getHeader(),
     username: '',
-    userinfo: {}
+    userinfo: {},
+    testItem: [
+      {
+        value: '1',
+        label: '测试管理系统'
+      },
+      {
+        value: '2',
+        label: '多源监控管理系统'
+      },
+      {
+        value: '3',
+        label: '用户管理系统'
+      },
+      {
+        value: '4',
+        label: '用例检查系统'
+      }
+    ],
+    ongoingItem: ''
   },
 
   mutations: {
@@ -18,6 +36,9 @@ const user = {
     SET_USER_INFO: (state, user) => {
       state.username = user.username
       state.userinfo = user
+    },
+    SET_ITEM: (state, item) => {
+      state.ongoingItem = item
     }
   },
 
@@ -25,15 +46,17 @@ const user = {
     // 登录
     Login({ commit }, userInfo) {
       return new Promise((resolve, reject) => {
-        login(userInfo).then(response => {
-          const result = response.data
-          const tokenValue = result.prefix + result.value
-          setToken(result.header, tokenValue)
-          commit('SET_TOKEN', result.header, tokenValue)
-          resolve()
-        }).catch(error => {
-          reject(error)
-        })
+        login(userInfo)
+          .then(response => {
+            const result = response.data
+            const tokenValue = result.prefix + result.value
+            setToken(result.header, tokenValue)
+            commit('SET_TOKEN', result.header, tokenValue)
+            commit('SET_ITEM', userInfo.testItem)
+            resolve()
+          }).catch(error => {
+            reject(error)
+          })
       })
     },
 
@@ -42,7 +65,9 @@ const user = {
       return new Promise((resolve, reject) => {
         getUserInfo().then(response => {
           const result = response.data
+          const item = response.data.testItem
           commit('SET_USER_INFO', result)
+          commit('SET_ITEM', item)
           resolve(response)
         }).catch(error => {
           reject(error)
@@ -56,6 +81,7 @@ const user = {
         logout().then(() => {
           commit('SET_USER_INFO', '')
           commit('SET_TOKEN', '', '')
+          commit('SET_ITEM', '')
           removeToken()
           resolve()
         }).catch(error => {

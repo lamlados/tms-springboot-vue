@@ -11,13 +11,13 @@
       <div class="title-container">
         <h3 class="title">系统登录</h3>
       </div>
-      <el-form-item prop="test-item">
-        <el-select v-model="value" placeholder="请选择测试项目" style="width: 115%">
+      <el-form-item prop="testItem">
+        <el-select v-model="loginForm.testItem" placeholder="请选择测试项目" style="width: 115%">
           <el-option
             v-for="item in options"
             :key="item.value"
             :label="item.label"
-            :value="item.value"
+            :value="item.label"
           />
         </el-select>
       </el-form-item>
@@ -94,39 +94,49 @@ import Background from '@/assets/background.jpg'
 export default {
   name: 'Login',
   data() {
+    const validateTestItem = (rule, value, callback) => {
+      if (value.length < 2) {
+        callback(new Error('请选择测试项目！'))
+      } else {
+        callback()
+      }
+    }
     const validateUsername = (rule, value, callback) => {
       if (value.length < 5) {
-        callback(new Error('用户名不能小于5位!'))
+        callback(new Error('用户名不能小于5位！'))
       } else {
         callback()
       }
     }
     const validatePassword = (rule, value, callback) => {
-      if (value.length < 6) {
-        callback(new Error('密码不得少于6位！'))
+      if (value.length < 5) {
+        callback(new Error('密码不得少于5位！'))
       } else {
         callback()
       }
     }
     const validateCodeText = (rule, value, callback) => {
       if (value.length !== 4) {
-        callback(new Error('验证码只能是4位'))
+        callback(new Error('输入4位验证码！'))
       } else {
         callback()
       }
     }
     return {
+      options: [],
       Background: Background,
       loginForm: {
         username: 'lamlados',
         password: 'hurrican3',
         codeKey: '',
-        codeText: ''
+        codeText: '',
+        testItem: ''
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
         password: [{ required: true, trigger: 'blur', validator: validatePassword }],
-        codeText: [{ required: true, trigger: 'blur', validator: validateCodeText }]
+        codeText: [{ required: true, trigger: 'blur', validator: validateCodeText }],
+        testItem: [{ required: true, trigger: 'blur', validator: validateTestItem }]
       },
       codeUrl: '',
       loading: false,
@@ -145,6 +155,7 @@ export default {
   created() {
     this.randomCodeKey()
     this.changeImageCode()
+    this.options = this.$store.getters.testItem
   },
   mounted() {
     // 绑定事件
