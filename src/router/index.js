@@ -55,6 +55,25 @@ export const constantRoutes = [
     }]
   },
   {
+    path: '/systemnew',
+    component: Layout,
+    meta: { title: '测试项目管理', icon: 'form' },
+    children: [
+      {
+        path: 'item',
+        name: 'Item',
+        component: () => import('@/views/systemNew/index'),
+        meta: { title: '测试用例', icon: 'example' }
+      },
+      {
+        path: 'bug',
+        name: 'Bug',
+        component: () => import('@/views/bugNew/index'),
+        meta: { title: '问题管理', icon: 'el-icon-s-release' }
+      }
+    ]
+  },
+  {
     path: '/system',
     redirect: '/system/item',
     name: 'System',

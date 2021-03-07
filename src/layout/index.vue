@@ -4,7 +4,7 @@
     <sidebar class="sidebar-container" />
     <div class="main-container">
       <div :class="{'fixed-header':fixedHeader}">
-        <navbar class="navbar-container"/>
+        <navbar class="navbar-container" />
       </div>
       <app-main />
     </div>
@@ -64,6 +64,14 @@ export default {
       top: 0;
     }
   }
+  //.navbar {
+  //  width: calc(100% - #{$sideBarWidth});
+  //  position:fixed;
+  //  top:0px;
+  //  right:0px;
+  //  z-index:1000;
+  //  transition: width 0.28s;
+  //}
   .drawer-bg {
     background: #000;
     opacity: 0.3;
@@ -82,11 +90,15 @@ export default {
     transition: width 0.28s;
   }
   .main-container{
+    //margin-top: 50px;
     position: fixed;
   }
   .hideSidebar .fixed-header {
     width: calc(100% - 54px)
   }
+  //.hideSidebar .navbar {
+  //  width: calc(100% - 54px)
+  //}
 
   .mobile .fixed-header {
     width: 100%;

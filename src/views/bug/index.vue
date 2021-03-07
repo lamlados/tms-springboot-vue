@@ -199,7 +199,7 @@ export default {
           'Authorization': getToken()
         },
         method: 'post',
-        url: 'http://localhost:8090/system/bug/pageInfo',
+        url: process.env.VUE_APP_BASE_API + '/system/bug/pageInfo',
         data: qs.stringify({
           pageNum: vm.listQuery.page,
           pageSize: vm.listQuery.limit
