@@ -8,6 +8,7 @@ import request from '@/utils/request' // 你项目http请求用的什么就引�
 Vue.use(d2CrudX, { name: 'd2-crud-x' }) // 注册名称为d2-crud-x ，不传name则使用d2-crud作为标签名称
 
 Vue.use(d2CrudPlus, {
+  starTip: false,
   // 获取数据字典的请求方法
   // 可在dict中配置getData方法覆盖此全局方法
   getRemoteDictFunc(url, dict) {

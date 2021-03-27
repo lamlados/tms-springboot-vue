@@ -4,8 +4,7 @@ const getters = {
   token: state => state.user.token,
   name: state => state.user.username,
   userinfo: state => state.user.userinfo,
-  testItem: state => state.user.testItem,
-  ongoingItem: state => state.user.ongoingItem,
+  currentItem: state => state.user.currentItem,
   // 当前用户的动态菜单路由
   dynamicRouters: state => state.permission.dynamicRouters,
   // 通用信息

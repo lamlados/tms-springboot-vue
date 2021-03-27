@@ -20,9 +20,7 @@ export const crudOptions = (vm) => { // vm即this
         search: {}, // 启用查询
         type: 'text', // 字段类型为选择框
         form: { // 配置添加和编辑，根据form的配置自动生成addTemplate和editTemplate
-          rules: [ // 【可选】添加和修改时的校验规则，不配置则不校验
-            { required: true, message: '请选择状态' }
-          ]
+          slot: true
         }
       },
       {
@@ -44,7 +42,7 @@ export const crudOptions = (vm) => { // vm即this
         search: { // 查询配置，默认启用查询
           disabled: true // 【可选】true禁止查询,默认为false
         },
-        type: 'select', // 字段类型为选择框
+        type: 'text', // 字段类型为选择框
         form: { // 配置添加和编辑，根据form的配置自动生成addTemplate和editTemplate
           rules: [ // 【可选】添加和修改时的校验规则，不配置则不校验
             { required: true, message: '请选择测试方法' }

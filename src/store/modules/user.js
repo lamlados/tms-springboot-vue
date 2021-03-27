@@ -1,5 +1,6 @@
 import { login, logout, getUserInfo } from '@/api/user'
 import { getToken, getHeader, setToken, removeToken } from '@/utils/auth'
+import { getTestItem } from '@/utils/dict'
 
 const user = {
   state: {
@@ -7,25 +8,8 @@ const user = {
     header: getHeader(),
     username: '',
     userinfo: {},
-    testItem: [
-      {
-        value: '1',
-        label: '测试管理系统'
-      },
-      {
-        value: '2',
-        label: '多源监控管理系统'
-      },
-      {
-        value: '3',
-        label: '用户管理系统'
-      },
-      {
-        value: '4',
-        label: '用例检查系统'
-      }
-    ],
-    ongoingItem: ''
+    testItem: getTestItem(),
+    currentItem: ''
   },
 
   mutations: {
@@ -38,7 +22,7 @@ const user = {
       state.userinfo = user
     },
     SET_ITEM: (state, item) => {
-      state.ongoingItem = item
+      state.currentItem = item
     }
   },
 
@@ -52,7 +36,7 @@ const user = {
             const tokenValue = result.prefix + result.value
             setToken(result.header, tokenValue)
             commit('SET_TOKEN', result.header, tokenValue)
-            commit('SET_ITEM', userInfo.testItem)
+            commit('SET_ITEM', userInfo.currentItem)
             resolve()
           }).catch(error => {
             reject(error)
@@ -65,7 +49,7 @@ const user = {
       return new Promise((resolve, reject) => {
         getUserInfo().then(response => {
           const result = response.data
-          const item = response.data.testItem
+          const item = response.data.currentItem
           commit('SET_USER_INFO', result)
           commit('SET_ITEM', item)
           resolve(response)

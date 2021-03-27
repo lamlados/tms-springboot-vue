@@ -6,16 +6,16 @@
 
     <div class="right-menu">
       <div class="status-container">
-        测试项目： {{ ongoingItem }}
+        测试项目： {{ currentItem }}
         当前用户：{{ name }}
       </div>
       <div class="item-switch-container">
-        <el-select v-model="testItem.value" clearable placeholder="选择测试项目" style="margin-right: 5px">
+        <el-select v-model="value" clearable placeholder="选择测试项目" style="margin-right: 5px">
           <el-option
-            v-for="item in testItem"
-            :key="item.value"
-            :label="item.label"
-            :value="item.label"
+            v-for="item in options"
+            :key="item.dictType"
+            :label="item.dictContent"
+            :value="item.dictContent"
           />
         </el-select>
         <el-button @click="switchItem">切换</el-button>
@@ -48,7 +48,9 @@ import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
 import Avatar from '@/assets/avatar.png'
+import { getTestItem } from '@/utils/dict'
 import { getToken } from '@/utils/auth'
+import qs from 'qs'
 export default {
   components: {
     Breadcrumb,
@@ -57,28 +59,22 @@ export default {
   data() {
     return {
       Avatar: Avatar,
-      options: []
+      options: [],
+      value: ''
     }
   },
   computed: {
     ...mapGetters([
       'sidebar',
       'name',
-      'testItem',
-      'ongoingItem'
+      'currentItem'
     ])
   },
-  created() {
-    this.fetchData()
-    // if (localStorage.getItem('store')) {
-    //   // replaceState替换数据 Object.assign合并对象
-    //   this.$store.replaceState(Object.assign({}, this.$store.state, JSON.parse(localStorage.getItem('store'))))
-    // }
-    // // 在页面刷新时将vuex里的信息保存到localStorage里，onbeforeunload在页面刷新前。
-    // window.addEventListener('beforeunload', () => {
-    //   localStorage.setItem('store', JSON.stringify(this.$store.state))
-    //   console.log(JSON.stringify(this.$store.state))
-    // })
+  mounted() {
+    // this.currentItem.value = { roomCode: '' }
+    this.options = getTestItem().then(response => {
+      this.options = response.data
+    })
   },
   methods: {
     toggleSideBar() {
@@ -89,19 +85,18 @@ export default {
         location.reload() // 为了重新实例化vue-router对象 避免bug
       })
     },
-    fetchData() {
-      var vm = this
+    switchItem() {
       this.axios({
         headers: {
           'Authorization': getToken()
         },
-        method: 'Get',
-        url: process.env.VUE_APP_BASE_API + '/system/testItem'
-      }).then(function(resp) {
-        vm.options = resp.data.data
+        method: 'post',
+        url: process.env.VUE_APP_BASE_API + '/system/item/switchItem',
+        data: qs.stringify({
+          user: this.name,
+          currentItem: this.value
+        })
       })
-    },
-    switchItem() {
       location.reload()
     }
 

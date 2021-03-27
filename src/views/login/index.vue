@@ -11,13 +11,13 @@
       <div class="title-container">
         <h3 class="title">系统登录</h3>
       </div>
-      <el-form-item prop="testItem">
-        <el-select v-model="loginForm.testItem" placeholder="请选择测试项目" style="width: 115%">
+      <el-form-item prop="currentItem">
+        <el-select v-model="loginForm.currentItem" placeholder="请选择测试项目" style="width: 115%">
           <el-option
             v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.label"
+            :key="item.dicType"
+            :label="item.dictContent"
+            :value="item.dictContent"
           />
         </el-select>
       </el-form-item>
@@ -90,6 +90,7 @@
 
 <script>
 import Background from '@/assets/background.jpg'
+import { getTestItem } from '@/utils/dict'
 
 export default {
   name: 'Login',
@@ -130,13 +131,13 @@ export default {
         password: 'hurrican3',
         codeKey: '',
         codeText: '',
-        testItem: ''
+        currentItem: ''
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
         password: [{ required: true, trigger: 'blur', validator: validatePassword }],
         codeText: [{ required: true, trigger: 'blur', validator: validateCodeText }],
-        testItem: [{ required: true, trigger: 'blur', validator: validateTestItem }]
+        currentItem: [{ required: true, trigger: 'blur', validator: validateTestItem }]
       },
       codeUrl: '',
       loading: false,
@@ -155,11 +156,13 @@ export default {
   created() {
     this.randomCodeKey()
     this.changeImageCode()
-    this.options = this.$store.getters.testItem
   },
   mounted() {
     // 绑定事件
     window.addEventListener('keydown', this.keyDown)
+    this.options = getTestItem().then(response => {
+      this.options = response.data
+    })
   },
   destroyed() {
     window.removeEventListener('keydown', this.keyDown, false)
