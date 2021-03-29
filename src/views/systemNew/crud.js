@@ -15,12 +15,42 @@ export const crudOptions = (vm) => { // vm即this
         }
       },
       {
+        title: '项目标识',
+        key: 'itemMark',
+        disabled: true,
+        search: { // 查询配置，默认启用查询
+          disabled: true // 【可选】true禁止查询,默认为false
+        },
+        type: 'text', // 字段类型为选择框
+        form: { // 配置添加和编辑，根据form的配置自动生成addTemplate和editTemplate
+          slot: true,
+          rules: [ // 【可选】添加和修改时的校验规则，不配置则不校验
+            { required: true, message: '请选择能力点生成序号' }]
+        }
+      },
+      {
+        title: '分类标识',
+        key: 'classificationMark',
+        disabled: true,
+        search: { // 查询配置，默认启用查询
+          disabled: true // 【可选】true禁止查询,默认为false
+        },
+        type: 'text', // 字段类型为选择框
+        form: { // 配置添加和编辑，根据form的配置自动生成addTemplate和editTemplate
+          slot: true,
+          rules: [ // 【可选】添加和修改时的校验规则，不配置则不校验
+            { required: true, message: '请选择能力点生成序号' }]
+        }
+      },
+      {
         title: '用例标识',
         key: 'caseMark',
         search: {}, // 启用查询
         type: 'text', // 字段类型为选择框
         form: { // 配置添加和编辑，根据form的配置自动生成addTemplate和editTemplate
-          slot: true
+          slot: true,
+          rules: [ // 【可选】添加和修改时的校验规则，不配置则不校验
+            { required: true, message: '请选择能力点生成序号' }]
         }
       },
       {
@@ -29,7 +59,7 @@ export const crudOptions = (vm) => { // vm即this
         search: { // 查询配置，默认启用查询
           disabled: true // 【可选】true禁止查询,默认为false
         },
-        type: 'text', // 字段类型为选择框
+        type: 'text-area', // 字段类型为选择框
         form: { // 配置添加和编辑，根据form的配置自动生成addTemplate和editTemplate
           rules: [ // 【可选】添加和修改时的校验规则，不配置则不校验
             { required: true, message: '请输入测试追踪' }
@@ -42,7 +72,7 @@ export const crudOptions = (vm) => { // vm即this
         search: { // 查询配置，默认启用查询
           disabled: true // 【可选】true禁止查询,默认为false
         },
-        type: 'text', // 字段类型为选择框
+        type: 'textarea', // 字段类型为选择框
         form: { // 配置添加和编辑，根据form的配置自动生成addTemplate和editTemplate
           rules: [ // 【可选】添加和修改时的校验规则，不配置则不校验
             { required: true, message: '请选择测试方法' }
@@ -55,7 +85,7 @@ export const crudOptions = (vm) => { // vm即this
         search: { // 查询配置，默认启用查询
           disabled: true // 【可选】true禁止查询,默认为false
         },
-        type: 'text', // 字段类型为选择框
+        type: 'text-area', // 字段类型为选择框
         form: { // 配置添加和编辑，根据form的配置自动生成addTemplate和editTemplate
           rules: [ // 【可选】添加和修改时的校验规则，不配置则不校验
             { required: true, message: '请输入测试说明' }
@@ -68,7 +98,7 @@ export const crudOptions = (vm) => { // vm即this
         search: { // 查询配置，默认启用查询
           disabled: true // 【可选】true禁止查询,默认为false
         },
-        type: 'text', // 字段类型为选择框
+        type: 'text-area', // 字段类型为选择框
         form: { // 配置添加和编辑，根据form的配置自动生成addTemplate和editTemplate
           rules: [ // 【可选】添加和修改时的校验规则，不配置则不校验
             { required: true, message: '请输入前提与约束' }
@@ -81,7 +111,7 @@ export const crudOptions = (vm) => { // vm即this
         search: { // 查询配置，默认启用查询
           disabled: true // 【可选】true禁止查询,默认为false
         },
-        type: 'text', // 字段类型为选择框
+        type: 'text-area', // 字段类型为选择框
         form: {
           rules: [{ required: true, message: '请输入终止条件' }]
         }
@@ -118,7 +148,7 @@ export const crudOptions = (vm) => { // vm即this
         search: { // 查询配置，默认启用查询
           disabled: true // 【可选】true禁止查询,默认为false
         },
-        type: 'text', // 字段类型为选择框
+        type: 'text-area', // 字段类型为选择框
         form: { // 配置添加和编辑，根据form的配置自动生成addTemplate和editTemplate
           rules: [ // 【可选】添加和修改时的校验规则，不配置则不校验
             { required: true, message: '请输入评估准则' }
@@ -131,13 +161,48 @@ export const crudOptions = (vm) => { // vm即this
         search: { // 查询配置，默认启用查询
           disabled: true // 【可选】true禁止查询,默认为false
         },
-        type: 'text', // 字段类型为选择框
+        type: 'text-area', // 字段类型为选择框
         form: { // 配置添加和编辑，根据form的配置自动生成addTemplate和editTemplate
-          rules: [ // 【可选】添加和修改时的校验规则，不配置则不校验
-            { required: true, message: '请输入评估准则' }
-          ]
+          // rules: [ // 【可选】添加和修改时的校验规则，不配置则不校验
+          //   { required: true, message: '请输入备注' }
+          // ]
         }
       }
-    ]
+    ],
+    rowHandle: { // https://greper.github.io/d2-crud-plus/d2-crud-x/row-handle.html#custom
+      edit: {
+        type: 'warning',
+        show: true
+      },
+      remove: {
+        type: 'dangerous',
+        show: true
+      },
+      custom: [
+        {
+          text: '按此模板新建',
+          size: 'small',
+          icon: 'el-icon-edit-outline',
+          emit: 'custom-emit-create'
+        },
+        {
+          text: '测试实施',
+          size: 'small',
+          icon: 'el-icon-thumb',
+          emit: 'custom-emit-execution'
+        },
+        {
+          text: '测试情况查看',
+          size: 'small',
+          icon: 'el-icon-more-outline',
+          emit: 'custom-emit-result'
+        }
+      ]
+    },
+    pageOptions: {
+      export: {
+        local: true // 本地导出，false为服务端导出
+      }
+    }
   }
 }

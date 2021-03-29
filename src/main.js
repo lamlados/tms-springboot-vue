@@ -8,6 +8,8 @@ import locale from 'element-ui/lib/locale/lang/zh-CN'
 
 import '@/styles/index.scss' // global css
 
+import pluginExport from '@d2-projects/vue-table-export'
+
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 import App from './App'
@@ -19,6 +21,7 @@ import '@/d2crud'
 
 Vue.use(ElementUI, { locale })
 Vue.use(VueAxios, axios)
+Vue.use(pluginExport)
 Vue.config.productionTip = false
 
 new Vue({

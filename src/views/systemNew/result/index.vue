@@ -1,6 +1,6 @@
 <template>
   <div :class="{'page-compact':crud.pageOptions.compact}">
-    <template slot="header">问题页面</template>
+    <template slot="header">测试情况页面</template>
     <d2-crud-x
       ref="d2Crud"
       style="height: 800px; margin: 15px"
@@ -25,7 +25,7 @@ import { crudOptions } from './crud' // 上文的crudOptions配置
 import { d2CrudPlus } from 'd2-crud-plus'
 import { AddObj, GetList, UpdateObj, DelObj } from './api' // 查询添加修改删除的http请求接口
 export default {
-  name: 'BugPage',
+  name: 'ResultPage',
   mixins: [d2CrudPlus.crud], // 最核心部分，继承d2CrudPlus.crud
   methods: {
     getCrudOptions() { return crudOptions(this) },
