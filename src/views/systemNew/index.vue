@@ -30,7 +30,7 @@
           placeholder="选择能力点后生成"
           readonly
           style="margin-bottom: 15px"
-        ></el-input>
+        />
       </template>
       <template slot="classificationMarkFormSlot" slot-scope="scope">
         <el-input
@@ -40,7 +40,7 @@
           placeholder="选择能力点后生成"
           readonly
           style="margin-bottom: 15px"
-        ></el-input>
+        />
       </template>
       <template slot="caseMarkFormSlot" slot-scope="scope">
         <el-input
@@ -50,7 +50,7 @@
           placeholder="选择能力点后生成"
           readonly
           style="margin-bottom: 15px"
-        ></el-input>
+        />
         <br>
         <el-select v-model="value" clearable placeholder="选择能力点" style="margin-bottom: 15px; margin-right: 15px">
           <el-option
@@ -62,6 +62,12 @@
         </el-select>
         <el-button @click="generateMark">生成序号</el-button>
       </template>
+      <el-dialog
+        title="测试实施"
+        :visible.sync="showExecutionDialog"
+      >
+        <ResultPage />
+      </el-dialog>
     </d2-crud-x>
   </div>
 </template>
@@ -73,9 +79,11 @@ import { AddObj, GetList, UpdateObj, DelObj } from './api'
 import { getToken } from '@/utils/auth'
 import { mapGetters } from 'vuex'
 import qs from 'qs'
+import ResultPage from './result/index'
 
 export default {
   name: 'TestCasePage',
+  components: { ResultPage },
   mixins: [d2CrudPlus.crud], // 最核心部分，继承d2CrudPlus.crud
   data() {
     return {
@@ -138,18 +146,7 @@ export default {
     addRequest(row) { return AddObj(row) }, // 添加请求
     updateRequest(row) { return UpdateObj(row) }, // 修改请求
     delRequest(row) { return DelObj(row.id) }, // 删除请求,
-    handleCreate() {
-      // 打开自定义模版的对话框
-      this.getD2Crud().showDialog({
-        mode: 'custom', // 当前打开模式,可选项[add,edit,view, 还可以自定义任意字符串]
-        template: {
-          data: this.scope.row
-        },
-        modeContext: {
-          test: '这里是modeContext---edit'
-        }
-      })
-    },
+    handleCreate() {},
     handleResult() {
       this.getD2Crud().showDialog({
         mode: 'custom', // 当前打开模式,可选项[add,edit,view, 还可以自定义任意字符串]
@@ -165,18 +162,8 @@ export default {
       })
     },
     handleExecution() {
-      this.getD2Crud().showDialog({
-        mode: 'custom', // 当前打开模式,可选项[add,edit,view, 还可以自定义任意字符串]
-        template: {
-          key1: {
-            title: '字段1',
-            key: 'key1'
-          }
-        },
-        modeContext: {
-          test: '这里是modeContext---edit'
-        }
-      })
+      this.showExecutionDialog = true
+      console.log('clicked')
     },
     customCreateDialog() {},
     customResultDialog() {},

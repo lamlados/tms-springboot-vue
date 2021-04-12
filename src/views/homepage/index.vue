@@ -1,7 +1,6 @@
 <template>
   <div class="dashboard-container">
     <div class="dashboard-text">Welcome, {{ name }} !</div>
-    <div>now you can see me</div>
   </div>
 </template>
 
