@@ -143,10 +143,7 @@ export default {
       this.getD2Crud().showDialog({
         mode: 'custom', // 当前打开模式,可选项[add,edit,view, 还可以自定义任意字符串]
         template: {
-          key1: {
-            title: '字段1',
-            key: 'key1'
-          }
+          data: this.scope.row
         },
         modeContext: {
           test: '这里是modeContext---edit'
