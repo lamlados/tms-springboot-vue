@@ -204,6 +204,7 @@ export default {
         }
       })
     },
+    // 验证码变换
     changeImageCode() {
       var arr = [process.env.VUE_APP_BASE_API, '/auth/verify/code', '/', this.loginForm.codeKey, '?r=', Math.ceil(Math.random() * 100)]
       var str = arr.join('')

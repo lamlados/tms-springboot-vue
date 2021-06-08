@@ -7,6 +7,14 @@ export function GetList(query) {
   })
 }
 
+export function AddObj(obj) {
+  return request({
+    url: '/system/result/add',
+    method: 'post',
+    data: obj
+  })
+}
+
 export function UpdateObj(obj) {
   return request({
     url: '/system/result/update',
@@ -16,7 +24,7 @@ export function UpdateObj(obj) {
 }
 export function DelObj(id) {
   return request({
-    url: '/system/item/delete',
+    url: '/system/result/delete',
     method: 'post',
     params: { id }
   })

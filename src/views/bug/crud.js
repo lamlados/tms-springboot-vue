@@ -15,14 +15,29 @@ export const crudOptions = (vm) => { // vm即this
         }
       },
       {
+        title: '项目标识',
+        key: 'itemMark',
+        type: 'text',
+        disabled: true,
+        search: { // 查询配置，默认启用查询
+          disabled: true // 【可选】true禁止查询,默认为false
+        },
+        width: '80px',
+        form: { // form表单的配置
+          slot: true,
+          rules: [ // 【可选】添加和修改时的校验规则，不配置则不校验
+            { required: true, message: '请生成项目标识' }]
+        }
+      },
+      {
         title: '问题标识',
         key: 'problemMark',
         search: {}, // 启用查询
         type: 'text', // 字段类型为选择框
-        form: { // 配置添加和编辑，根据form的配置自动生成addTemplate和editTemplate
+        form: { // form表单的配置
+          slot: true,
           rules: [ // 【可选】添加和修改时的校验规则，不配置则不校验
-            { required: true, message: '请选择状态' }
-          ]
+            { required: true, message: '请生成问题标识' }]
         }
       },
       {
@@ -31,10 +46,34 @@ export const crudOptions = (vm) => { // vm即this
         search: { // 查询配置，默认启用查询
           disabled: true // 【可选】true禁止查询,默认为false
         },
-        type: 'text', // 字段类型为选择框
+        type: 'select', // 字段类型为选择框
         form: { // 配置添加和编辑，根据form的配置自动生成addTemplate和editTemplate
           rules: [ // 【可选】添加和修改时的校验规则，不配置则不校验
-            { required: true, message: '请输入测试追踪' }
+            { required: true, message: '请输入问题类型' }
+          ]
+        },
+        dict: {
+          data: [
+            {
+              value: 1,
+              label: '设计问题',
+              disabled: false
+            },
+            {
+              value: 2,
+              label: '文档问题',
+              disabled: false
+            },
+            {
+              value: 3,
+              label: '程序问题',
+              disabled: false
+            },
+            {
+              value: 4,
+              label: '规范性问题',
+              disabled: false
+            }
           ]
         }
       },
@@ -47,7 +86,31 @@ export const crudOptions = (vm) => { // vm即this
         type: 'select', // 字段类型为选择框
         form: { // 配置添加和编辑，根据form的配置自动生成addTemplate和editTemplate
           rules: [ // 【可选】添加和修改时的校验规则，不配置则不校验
-            { required: true, message: '请选择测试方法' }
+            { required: true, message: '请输入问题级别' }
+          ]
+        },
+        dict: {
+          data: [
+            {
+              value: 1,
+              label: '一般',
+              disabled: false
+            },
+            {
+              value: 2,
+              label: '建议',
+              disabled: false
+            },
+            {
+              value: 3,
+              label: '严重',
+              disabled: false
+            },
+            {
+              value: 4,
+              label: '致命',
+              disabled: false
+            }
           ]
         }
       },
@@ -60,7 +123,7 @@ export const crudOptions = (vm) => { // vm即this
         type: 'text', // 字段类型为选择框
         form: { // 配置添加和编辑，根据form的配置自动生成addTemplate和editTemplate
           rules: [ // 【可选】添加和修改时的校验规则，不配置则不校验
-            { required: true, message: '请输入测试说明' }
+            { required: true, message: '请输入问题描述' }
           ]
         }
       },
@@ -71,10 +134,10 @@ export const crudOptions = (vm) => { // vm即this
           disabled: true // 【可选】true禁止查询,默认为false
         },
         type: 'text', // 字段类型为选择框
-        form: { // 配置添加和编辑，根据form的配置自动生成addTemplate和editTemplate
+        form: { // form表单的配置
+          slot: true,
           rules: [ // 【可选】添加和修改时的校验规则，不配置则不校验
-            { required: true, message: '请输入前提与约束' }
-          ]
+            { required: true, message: '请生成项目标识' }]
         }
       },
       {
@@ -85,7 +148,8 @@ export const crudOptions = (vm) => { // vm即this
         },
         type: 'text', // 字段类型为选择框
         form: {
-          rules: [{ required: true, message: '请输入终止条件' }]
+          disabled: true
+          // rules: [{ required: true, message: '请输入终止条件' }]
         }
       },
       {
@@ -96,9 +160,7 @@ export const crudOptions = (vm) => { // vm即this
         },
         type: 'text', // 字段类型为选择框
         form: { // 配置添加和编辑，根据form的配置自动生成addTemplate和editTemplate
-          rules: [ // 【可选】添加和修改时的校验规则，不配置则不校验
-            { required: true, message: '请输入操作说明' }
-          ]
+          disabled: true
         }
       },
       {
@@ -109,9 +171,7 @@ export const crudOptions = (vm) => { // vm即this
         },
         type: 'text', // 字段类型为选择框
         form: { // 配置添加和编辑，根据form的配置自动生成addTemplate和editTemplate
-          rules: [ // 【可选】添加和修改时的校验规则，不配置则不校验
-            { required: true, message: '请输入期望结果' }
-          ]
+          disabled: true
         }
       },
       {
@@ -122,9 +182,7 @@ export const crudOptions = (vm) => { // vm即this
         },
         type: 'text', // 字段类型为选择框
         form: { // 配置添加和编辑，根据form的配置自动生成addTemplate和editTemplate
-          rules: [ // 【可选】添加和修改时的校验规则，不配置则不校验
-            { required: true, message: '请输入评估准则' }
-          ]
+          disabled: true
         }
       },
       {
@@ -135,11 +193,18 @@ export const crudOptions = (vm) => { // vm即this
         },
         type: 'text', // 字段类型为选择框
         form: { // 配置添加和编辑，根据form的配置自动生成addTemplate和editTemplate
-          rules: [ // 【可选】添加和修改时的校验规则，不配置则不校验
-            { required: true, message: '请输入评估准则' }
-          ]
         }
       }
-    ]
+    ],
+    rowHandle: { // https://greper.github.io/d2-crud-plus/d2-crud-x/row-handle.html#custom
+      edit: {
+        type: 'warning',
+        show: true
+      },
+      remove: {
+        type: 'dangerous',
+        show: true
+      }
+    }
   }
 }

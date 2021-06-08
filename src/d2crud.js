@@ -4,8 +4,25 @@ import { d2CrudPlus } from 'd2-crud-plus'
 import d2CrudX from 'd2-crud-x'
 import Vue from 'vue'
 import request from '@/utils/request' // 你项目http请求用的什么就引入什么
+import { D2pFileUploader, D2pUploader } from 'd2p-extends'
 
 Vue.use(d2CrudX, { name: 'd2-crud-x' }) // 注册名称为d2-crud-x ，不传name则使用d2-crud作为标签名称
+
+Vue.use(D2pFileUploader, { d2CrudPlus })
+Vue.use(D2pUploader, {
+  defaultType: 'form', // 默认类型为腾讯云上传，可选值：【cos、qiniu、alioss、form】
+  form: { // 本地服务端上传
+    action: '', // 上传url
+    name: 'file', // 上传时文件的参数名
+    data: {}, // 上传附加参数
+    headers: {}, // 上传请求头
+    successHandle(res) { // 上传成功后，后台返回结果处理
+      return { url: res.data } // data是该文件的url
+    },
+    withCredentials: false // 是否带cookie
+  }
+  // ,buildKey(){} //key生成规则方法，也可以配置在组件的uploader参数里面，默认根据时间日期和文件名称生成
+})
 
 Vue.use(d2CrudPlus, {
   starTip: false,

@@ -1,6 +1,6 @@
 <template>
   <div :class="{'page-compact':crud.pageOptions.compact}">
-    <template slot="header">问题页面</template>
+    <template slot="header">测试情况页面</template>
     <d2-crud-x
       ref="d2Crud"
       style="height: 800px; margin: 15px"
@@ -26,21 +26,11 @@
           style="margin-bottom: 15px"
         />
       </template>
-      <template slot="problemMarkFormSlot" slot-scope="scope">
+      <template slot="caseMarkFormSlot" slot-scope="scope">
         <el-input
-          id="txtProblemMark"
-          v-model="scope.form.problemMark"
-          name="txtProblemMark"
-          placeholder="待生成"
-          readonly
-          style="margin-bottom: 15px"
-        />
-      </template>
-      <template slot="caseNumberFormSlot" slot-scope="scope">
-        <el-input
-          id="txtCaseNumber"
-          v-model="scope.form.caseNumber"
-          name="txtCaseNumber"
+          id="txtCaseMark"
+          v-model="scope.form.caseMark"
+          name="txtCaseMark"
           placeholder="待生成"
           readonly
           style="margin-bottom: 15px"
@@ -49,6 +39,8 @@
         <el-button @click="generateMark">生成序号</el-button>
       </template>
     </d2-crud-x>
+    <BugPage ref="bugPage">
+    </BugPage>
   </div>
 </template>
 
@@ -56,41 +48,48 @@
 import { crudOptions } from './crud' // 上文的crudOptions配置
 import { d2CrudPlus } from 'd2-crud-plus'
 import { AddObj, GetList, UpdateObj, DelObj } from './api'
-import {getToken} from "@/utils/auth";
-import qs from "qs"; // 查询添加修改删除的http请求接口
+import { getToken } from '@/utils/auth'
+import BugPage from '../bug/index'
+import qs from 'qs' // 查询添加修改删除的http请求接口
 export default {
-  name: 'BugPage',
+  name: 'ResultPage',
+  components: { BugPage },
   mixins: [d2CrudPlus.crud], // 最核心部分，继承d2CrudPlus.crud
+  created() {
+    this.crud.searchOptions.disabled = true
+  },
   methods: {
     getCrudOptions() { return crudOptions(this) },
     pageRequest(query) { return GetList(query) }, // 数据请求
-    addRequest(row) { return AddObj(row) }, // 添加请求
+    addRequest(row) {
+      if (row.executionResult == '不通过') {
+        this.$refs.bugPage.showAddDialog()
+      }
+      return AddObj(row)
+    }, // 添加请求
     updateRequest(row) { return UpdateObj(row) }, // 修改请求
     delRequest(row) { return DelObj(row.id) }, // 删除请求
-    showAddDialog() {
-      this.$refs.d2Crud.showDialog({
-        mode: 'add'
-      })
-    },
+    // showAddDialog() {
+    //   this.$refs.d2Crud.showDialog({
+    //     mode: 'add'
+    //   })
+    // },
     generateMark() {
       this.axios({
         headers: {
           'Authorization': getToken()
         },
         method: 'post',
-        url: process.env.VUE_APP_BASE_API + '/system/bug/generateMark',
+        url: process.env.VUE_APP_BASE_API + '/system/result/generateMark',
         data: qs.stringify({
         })
       }).then((response, row) => {
-        var inp1 = document.querySelector('#txtCaseNumber')
+        var inp1 = document.querySelector('#txtCaseMark')
         inp1.value = response.data.data[1]
         inp1.dispatchEvent(new Event('input'))
         var inp2 = document.querySelector('#txtItemMark')
         inp2.value = response.data.data[0]
         inp2.dispatchEvent(new Event('input'))
-        var inp3 = document.querySelector('#txtProblemMark')
-        inp3.value = response.data.data[2]
-        inp3.dispatchEvent(new Event('input'))
       })
     }
   }
