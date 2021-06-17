@@ -59,10 +59,29 @@ export const crudOptions = (vm) => { // vm即this
         search: { // 查询配置，默认启用查询
           disabled: true // 【可选】true禁止查询,默认为false
         },
-        type: 'text-area', // 字段类型为选择框
+        type: 'select', // 字段类型为选择框
         form: { // 配置添加和编辑，根据form的配置自动生成addTemplate和editTemplate
           rules: [ // 【可选】添加和修改时的校验规则，不配置则不校验
             { required: true, message: '请输入测试追踪' }
+          ]
+        },
+        dict: {
+          data: [
+            {
+              value: '产品说明符合性',
+              label: '产品说明符合性',
+              disabled: false
+            },
+            {
+              value: '软件符合性',
+              label: '软件符合性',
+              disabled: false
+            },
+            {
+              value: '用户文档集符合性',
+              label: '用户文档集符合性',
+              disabled: false
+            }
           ]
         }
       },
@@ -72,10 +91,39 @@ export const crudOptions = (vm) => { // vm即this
         search: { // 查询配置，默认启用查询
           disabled: true // 【可选】true禁止查询,默认为false
         },
-        type: 'textarea', // 字段类型为选择框
+        type: 'select', // 字段类型为选择框
         form: { // 配置添加和编辑，根据form的配置自动生成addTemplate和editTemplate
           rules: [ // 【可选】添加和修改时的校验规则，不配置则不校验
             { required: true, message: '请选择测试方法' }
+          ]
+        },
+        dict: {
+          data: [
+            {
+              value: '边界值法',
+              label: '边界值法',
+              disabled: false
+            },
+            {
+              value: '因果图法',
+              label: '因果图法',
+              disabled: false
+            },
+            {
+              value: '等价分类法',
+              label: '等价分类法',
+              disabled: false
+            },
+            {
+              value: '场景法',
+              label: '场景法',
+              disabled: false
+            },
+            {
+              value: '错误推测法',
+              label: '错误推测法',
+              disabled: false
+            }
           ]
         }
       },
@@ -85,12 +133,13 @@ export const crudOptions = (vm) => { // vm即this
         search: { // 查询配置，默认启用查询
           disabled: true // 【可选】true禁止查询,默认为false
         },
-        type: 'text-area', // 字段类型为选择框
+        type: 'slot', // 字段类型为选择框
         form: { // 配置添加和编辑，根据form的配置自动生成addTemplate和editTemplate
-          rules: [ // 【可选】添加和修改时的校验规则，不配置则不校验
-            { required: true, message: '请输入测试说明' }
-          ]
-        }
+          // rules: [ // 【可选】添加和修改时的校验规则，不配置则不校验
+          //   { required: true, message: '请输入测试说明' }
+          // ]
+        },
+        rowSlot: true
       },
       {
         title: '前提与约束',
@@ -127,6 +176,13 @@ export const crudOptions = (vm) => { // vm即this
           rules: [ // 【可选】添加和修改时的校验规则，不配置则不校验
             { required: true, message: '请输入操作说明' }
           ]
+          // component: {
+          //   props: {
+          //     uploader: {
+          //       type: 'form'
+          //     }
+          //   }
+          // }
         }
       },
       {
@@ -179,18 +235,12 @@ export const crudOptions = (vm) => { // vm即this
         show: true
       },
       custom: [
-        {
-          text: '按此模板新建',
-          size: 'small',
-          icon: 'el-icon-edit-outline',
-          emit: 'custom-emit-create'
-        },
-        {
-          text: '测试实施',
-          size: 'small',
-          icon: 'el-icon-thumb',
-          emit: 'custom-emit-execution'
-        },
+        // {
+        //   text: '按此模板新建',
+        //   size: 'small',
+        //   icon: 'el-icon-edit-outline',
+        //   emit: 'custom-emit-create'
+        // },
         {
           text: '测试情况查看',
           size: 'small',

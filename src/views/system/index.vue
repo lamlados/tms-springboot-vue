@@ -1,562 +1,211 @@
 <template>
-  <div class="app-container">
-    <el-row :gutter="20">
-      <!--侧边分类数据-->
-      <el-col :xs="9" :sm="6" :md="5" :lg="4" :xl="4">
-        <div class="head-container">
-          <el-input v-model="filterText" size="small" placeholder="树形搜索栏" style="margin-bottom:10px;" />
-        </div>
-        <el-tree
-          ref="tree2"
-          :data="treeData"
-          :props="defaultProps"
-          :filter-node-method="filterNode"
-          class="filter-tree"
-          default-expand-all
-        />
-      </el-col>
-      <!--用户数据-->
-      <el-col :xs="15" :sm="18" :md="19" :lg="20" :xl="20">
-        <!--工具栏-->
-        <div class="head-container">
-          <div v-show="showSearch">
-            <!-- 搜索 -->
-            <el-input
-              clearable
-              size="small"
-              placeholder="输入用例标识搜索"
-              style="width: 200px; margin-bottom: 10px"
-              class="filter-item"
-            />
-            <span>
-              <el-button class="filter-item" size="mini" type="primary" icon="el-icon-search" style="margin-left: 10px">搜索</el-button>
-              <el-button class="filter-item" size="mini" icon="el-icon-refresh-left" @click="handleResult">重置</el-button>
-            </span>
-          </div>
-          <div class="crud-opts" style="margin-bottom: 5px">
-            <span class="crud-opts-left" style="">
-              <!--左侧插槽-->
-              <slot name="left" />
-              <el-button
-                size="mini"
-                type="primary"
-                plain
-                icon="el-icon-plus"
-                @click="handleAdd"
-              >
-                新增
-              </el-button>
-              <el-button
-                type="danger"
-                plain
-                icon="el-icon-delete"
-                size="mini"
-              >
-                删除
-              </el-button>
-              <el-button
-                size="mini"
-                type="warning"
-                plain
-                icon="el-icon-download"
-              >
-                导出
-              </el-button>
-              <!--右侧-->
-              <slot name="right" />
-            </span>
-            <RightToolbar :show-search.sync="showSearch" @queryTable="fetchData" />
-          </div>
-        </div>
-        <!--表单渲染-->
-        <el-dialog :visible.sync="addFormVisible" append-to-body :close-on-click-modal="false" width="900px" title="新增测试项目">
-          <el-form ref="elForm" size="medium" label-width="100px">
-            <el-row>
-              <el-col :span="12">
-                <el-form-item label="用例标识" prop="field102">
-                  <div :style="{width: '100%'}">自动生成-项目名1
-                  </div>
-                </el-form-item>
-              </el-col>
-              <el-col :span="12">
-                <el-form-item label="测试追踪" prop="field103">
-                  <el-input placeholder="请输入测试追踪" clearable :style="{width: '100%'}" />
-                </el-form-item>
-              </el-col>
-              <el-col :span="12">
-                <el-form-item label="测试方法" prop="field106">
-                  <el-select placeholder="请选择测试方法" clearable :style="{width: '100%'}" value />
-                </el-form-item>
-              </el-col>
-              <el-col :span="12">
-                <el-form-item label="测试说明" prop="field105">
-                  <el-input placeholder="请输入测试说明" clearable :style="{width: '100%'}" />
-                </el-form-item>
-              </el-col>
-              <el-col :span="12">
-                <el-form-item label="前提与约束" prop="field109">
-                  <el-input
-                    type="textarea"
-                    placeholder="请输入前提与约束"
-                    :autosize="{minRows: 4, maxRows: 4}"
-                    :style="{width: '100%'}"
-                  />
-                </el-form-item>
-              </el-col>
-              <el-col :span="12">
-                <el-form-item label="终止条件" prop="field112">
-                  <el-input
-                    type="textarea"
-                    placeholder="请输入终止条件"
-                    :autosize="{minRows: 4, maxRows: 4}"
-                    :style="{width: '100%'}"
-                  />
-                </el-form-item>
-              </el-col>
-              <el-col :span="12">
-                <el-form-item label="输入及操作说明" prop="field111">
-                  <el-input
-                    type="textarea"
-                    placeholder="请输入输入及操作说明"
-                    :autosize="{minRows: 4, maxRows: 4}"
-                    :style="{width: '100%'}"
-                  />
-                </el-form-item>
-              </el-col>
-              <el-col :span="12">
-                <el-form-item label="期望测试结果" prop="field110">
-                  <el-input
-                    type="textarea"
-                    placeholder="请输入期望测试结果"
-                    :autosize="{minRows: 4, maxRows: 4}"
-                    :style="{width: '100%'}"
-                  />
-                </el-form-item>
-              </el-col>
-              <el-col :span="12">
-                <el-form-item label="评估准则" prop="field108">
-                  <el-input
-                    type="textarea"
-                    placeholder="请输入评估准则"
-                    :autosize="{minRows: 4, maxRows: 4}"
-                    :style="{width: '100%'}"
-                  />
-                </el-form-item>
-              </el-col>
-              <el-col :span="12">
-                <el-form-item label="备注" prop="field107">
-                  <el-input
-                    type="textarea"
-                    placeholder="请输入备注"
-                    :autosize="{minRows: 4, maxRows: 4}"
-                    :style="{width: '100%'}"
-                  />
-                </el-form-item>
-              </el-col>
-            </el-row>
-          </el-form>
-          <div slot="footer">
-            <el-button @click="cancelForm">取消</el-button>
-            <el-button type="primary" @click="handelConfirm">确定</el-button>
-          </div>
-        </el-dialog>
-        <el-dialog :visible.sync="executionFormVisible" append-to-body :close-on-click-modal="false" title="测试实施">
-          <el-form ref="elForm" size="medium" label-width="100px">
-            <el-row>
-              <el-col :span="12">
-                <el-form-item label="测试版本" prop="field102">
-                  <el-input placeholder="请输入测试版本" clearable :style="{width: '100%'}" />
-                </el-form-item>
-              </el-col>
-              <el-col :span="12">
-                <el-form-item label="执行日期" prop="field117">
-                  <el-date-picker
-                    format="yyyy-MM-dd"
-                    value-format="yyyy-MM-dd"
-                    :style="{width: '100%'}"
-                    placeholder="请选择执行日期"
-                    clearable
-                  />
-                </el-form-item>
-              </el-col>
-              <el-col :span="12">
-                <el-form-item label="实际结果" prop="field103">
-                  <el-input placeholder="请输入实际结果" clearable :style="{width: '100%'}" />
-                </el-form-item>
-              </el-col>
-              <el-col :span="12">
-                <el-form-item label="测试人员" prop="field115">
-                  <el-input placeholder="请输入测试人员" clearable :style="{width: '100%'}" />
-                </el-form-item>
-              </el-col>
-              <el-col :span="12">
-                <el-form-item label="执行结果" prop="field105">
-                  <el-input placeholder="请输入执行结果" clearable :style="{width: '100%'}" />
-                </el-form-item>
-              </el-col>
-              <el-col :span="12">
-                <el-form-item label="测试监督员" prop="field113">
-                  <el-input placeholder="请输入测试监督员" clearable :style="{width: '100%'}" />
-                </el-form-item>
-              </el-col>
-              <el-col :span="12">
-                <el-form-item label="问题标识" prop="field114">
-                  <el-input placeholder="请输入问题标识" clearable :style="{width: '100%'}" />
-                </el-form-item>
-              </el-col>
-              <el-col :span="12">
-                <el-form-item label="备注" prop="field118">
-                  <el-input
-                    type="textarea"
-                    placeholder="请输入备注"
-                    :autosize="{minRows: 4, maxRows: 4}"
-                    :style="{width: '100%'}"
-                  />
-                </el-form-item>
-              </el-col>
-            </el-row>
-          </el-form>
-          <div slot="footer">
-            <el-button @click="close">取消</el-button>
-            <el-button type="primary" @click="handelConfirm">确定</el-button>
-          </div>
-        </el-dialog>
-        <el-dialog :visible.sync="resultFormVisible" append-to-body :close-on-click-modal="false" width="850px" title="测试情况查看">
-          <el-table
-            ref="table"
-            style="width: 100%;"
-            :data="list"
-            :row-style="{height: '80px'}"
-          >
-            <el-table-column :show-overflow-tooltip="true" width="60" prop="id" label="序号">
-              <template slot-scope="scope">
-                {{ scope.row.id }}
-              </template>
-            </el-table-column>
-            <el-table-column :show-overflow-tooltip="true" width="100" prop="caseMark" label="测试人员">
-              <template slot-scope="scope">
-                {{ scope.row.caseMark }}
-              </template>
-            </el-table-column>
-            <el-table-column :show-overflow-tooltip="true" width="100" prop="track" label="执行时间">
-              <template slot-scope="scope">
-                {{ scope.row.testMethod }}
-              </template>
-            </el-table-column>
-            <el-table-column :show-overflow-tooltip="true" width="100" prop="testDescription" label="测试版本">
-              <template slot-scope="scope">
-                {{ scope.row.testDescription }}
-              </template>
-            </el-table-column>
-            <el-table-column :show-overflow-tooltip="true" width="100" prop="preCons" label="实际测试结果">
-              <template slot-scope="scope">
-                {{ scope.row.premiseConstraint }}
-              </template>
-            </el-table-column>
-            <el-table-column :show-overflow-tooltip="true" width="100" prop="endCondition" label="执行结果">
-              <template slot-scope="scope">
-                {{ scope.row.endCondition }}
-              </template>
-            </el-table-column>
-            <el-table-column :show-overflow-tooltip="true" width="120" prop="opDescription" label="问题标识">
-              <template slot-scope="scope">
-                {{ scope.row.operatingDescription }}
-              </template>
-            </el-table-column>
-            <el-table-column
-              label="操作"
-              width="115"
-              align="center"
-              fixed="right"
-            >
-              <template slot-scope="scope">
-                <div
-                  :data="scope"
-                >
-                  <el-button size="mini" type="primary" icon="el-icon-edit" plain style="width: 44%;" />
-                  <el-button size="mini" type="danger" icon="el-icon-delete" plain style="width: 44%;" />
-                </div>
-              </template>
-            </el-table-column>
-          </el-table>
-          <Pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="fetchData" />
-        </el-dialog>
-        <el-dialog :visible.sync="problemFormVisible" append-to-body :close-on-click-modal="false" width="500px" title="BUG创建">
-          <el-row :gutter="15">
-            <el-form
-              ref="elForm"
-              size="medium"
-              label-width="100px"
-              label-position="left"
-            >
-              <el-col :span="24">
-                <el-row>
-                  <el-col :span="24">
-                    <el-form-item label="问题标识" prop="field102">
-                      <el-input
-                        placeholder="请输入问题标识"
-                        clearable
-                        :style="{width: '100%'}"
-                      />
-                    </el-form-item>
-                  </el-col>
-                  <el-col :span="24">
-                    <el-form-item label="问题类别" prop="field103">
-                      <el-input
-                        placeholder="请输入问题类别"
-                        clearable
-                        :style="{width: '100%'}"
-                      />
-                    </el-form-item>
-                  </el-col>
-                  <el-col :span="24">
-                    <el-form-item label="问题级别" prop="field104">
-                      <el-input
-                        placeholder="请输入问题级别"
-                        clearable
-                        :style="{width: '100%'}"
-                      />
-                    </el-form-item>
-                  </el-col>
-                  <el-col :span="24">
-                    <el-form-item label="问题描述" prop="field105">
-                      <el-input
-                        placeholder="请输入问题描述"
-                        clearable
-                        :style="{width: '100%'}"
-                      />
-                    </el-form-item>
-                  </el-col>
-                  <el-col :span="24">
-                    <el-form-item label="备注" prop="field106">
-                      <el-input
-                        type="textarea"
-                        placeholder="请输入备注"
-                        :autosize="{minRows: 4, maxRows: 4}"
-                        :style="{width: '100%'}"
-                      />
-                    </el-form-item>
-                  </el-col>
-                </el-row>
-              </el-col>
-            </el-form>
-          </el-row>
-          <div slot="footer">
-            <el-button @click="close">取消</el-button>
-            <el-button type="primary" @click="handelConfirm">确定</el-button>
-          </div>
-        </el-dialog>
-        <!--表格渲染-->
-        <el-table
-          ref="table"
-          style="width: 100%;"
-          :data="list"
-          :row-style="{height: '80px'}"
+  <div :class="{'page-compact':crud.pageOptions.compact}">
+    <template slot="header">测试用例页面</template>
+    <el-dialog
+      id="resultDialog"
+      title="测试情况查看"
+      :visible.sync="dialogFormVisible"
+      fullscreen>
+      <ResultPage ref="resultPage">
+      </ResultPage>
+    </el-dialog>
+    <d2-crud-x
+      ref="d2Crud"
+      style="height: 800px; margin: 15px"
+      v-bind="_crudProps"
+      v-on="_crudListeners"
+      @custom-emit-result="handleResult"
+    >
+
+      <!-- 自动绑定参数与事件 -->
+      <!-- 包含详细参数见：https://gitee.com/greper/d2-crud-plus/blob/master/packages/d2-crud-plus/src/lib/mixins/crud.js#L164-->
+      <div slot="header">
+        <crud-search ref="search" :options="crud.searchOptions" @submit="handleSearch" />
+        <el-button-group>
+          <el-button size="small" type="primary" @click="addRow"><i class="el-icon-plus" /> 新增</el-button>
+        </el-button-group>
+        <crud-toolbar v-bind="_crudToolbarProps" v-on="_crudToolbarListeners" />
+      </div>
+      <template slot="testDescriptionFormSlot" slot-scope="scope">
+        <el-upload
+          class="upload-demo"
+          action="http://localhost:8090/system/item/uploadPic"
+          :limit="1"
+          :auto-upload="true"
         >
-          <el-table-column type="selection" width="55" />
-          <el-table-column :show-overflow-tooltip="true" width="60" prop="id" label="序号">
-            <template slot-scope="scope">
-              {{ scope.row.id }}
-            </template>
-          </el-table-column>
-          <el-table-column :show-overflow-tooltip="true" width="100" prop="caseMark" label="用例标识">
-            <template slot-scope="scope">
-              {{ scope.row.caseMark }}
-            </template>
-          </el-table-column>
-          <el-table-column :show-overflow-tooltip="true" width="100" prop="track" label="测试追踪">
-            <template slot-scope="scope">
-              {{ scope.row.testTrack }}
-            </template>
-          </el-table-column>
-          <el-table-column :show-overflow-tooltip="true" width="100" prop="method" label="测试方法">
-            <template slot-scope="scope">
-              {{ scope.row.testMethod }}
-            </template>
-          </el-table-column>
-          <el-table-column :show-overflow-tooltip="true" width="100" prop="testDescription" label="测试说明">
-            <template slot-scope="scope">
-              {{ scope.row.testDescription }}
-            </template>
-          </el-table-column>
-          <el-table-column :show-overflow-tooltip="true" width="100" prop="preCons" label="前提与约束">
-            <template slot-scope="scope">
-              {{ scope.row.premiseConstraint }}
-            </template>
-          </el-table-column>
-          <el-table-column :show-overflow-tooltip="true" width="100" prop="endCondition" label="终止条件">
-            <template slot-scope="scope">
-              {{ scope.row.endCondition }}
-            </template>
-          </el-table-column>
-          <el-table-column :show-overflow-tooltip="true" width="120" prop="opDescription" label="输入及操作说明">
-            <template slot-scope="scope">
-              {{ scope.row.operatingDescription }}
-            </template>
-          </el-table-column>
-          <el-table-column :show-overflow-tooltip="true" width="120" prop="expectedResult" label="期望测试结果">
-            <template slot-scope="scope">
-              {{ scope.row.expectedResult }}
-            </template>
-          </el-table-column>
-          <el-table-column :show-overflow-tooltip="true" width="120" prop="criteria" label="评估准则">
-            <template slot-scope="scope">
-              {{ scope.row.evaluationCriteria }}
-            </template>
-          </el-table-column>
-          <el-table-column
-            label="操作"
-            width="115"
-            align="center"
-            fixed="right"
-          >
-            <template slot-scope="scope">
-              <div
-                :data="scope"
-              >
-                <el-dropdown trigger="click" style="margin-right: 5px;font-size: small">
-                  <el-button size="mini" type="primary" icon="el-icon-caret-bottom" plain />
-                  <el-dropdown-menu slot="dropdown" class="opts-dropdown">
-                    <el-dropdown-item @click.native="handleAdd">按此模板新建</el-dropdown-item>
-                    <el-dropdown-item @click.native="handleAdd">修改</el-dropdown-item>
-                    <el-dropdown-item @click.native="handleExecution">测试实施</el-dropdown-item>
-                    <el-dropdown-item @click.native="handleProblem">测试情况查看</el-dropdown-item>
-                  </el-dropdown-menu>
-                </el-dropdown>
-                <el-button size="mini" type="danger" icon="el-icon-delete" plain @click="handleDelete" />
-              </div>
-            </template>
-          </el-table-column>
-        </el-table>
-        <Pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="fetchData" />
-      </el-col>
-    </el-row>
+          <el-button size="small" type="primary">点击上传</el-button>
+          <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+        </el-upload>
+      </template>
+      <template slot="testDescriptionSlot" slot-scope="scope">
+        <img :src="scope.row.testDescription" alt="h" height="100px" width="100px"/>
+      </template>
+      <template slot="itemMarkFormSlot" slot-scope="scope">
+        <el-input
+          id="txtItemMark"
+          v-model="scope.form.itemMark"
+          name="txtItemMark"
+          placeholder="选择能力点后生成"
+          readonly
+          style="margin-bottom: 15px"
+        />
+      </template>
+      <template slot="classificationMarkFormSlot" slot-scope="scope">
+        <el-input
+          id="txtClassMark"
+          v-model="scope.form.classificationMark"
+          name="txtClassMark"
+          placeholder="选择能力点后生成"
+          readonly
+          style="margin-bottom: 15px"
+        />
+      </template>
+      <template slot="caseMarkFormSlot" slot-scope="scope">
+        <el-input
+          id="txtCaseMark"
+          v-model="scope.form.caseMark"
+          name="txtCaseMark"
+          placeholder="选择能力点后生成"
+          readonly
+          style="margin-bottom: 15px"
+        />
+        <br>
+        <el-select v-model="value" clearable placeholder="选择能力点" style="margin-bottom: 15px; margin-right: 15px">
+          <el-option
+            v-for="item in options"
+            :key="item.dictType"
+            :label="item.dictContent"
+            :value="item.dictMark"
+          />
+        </el-select>
+        <el-button @click="generateMark">生成序号</el-button>
+      </template>
+      <template slot="FormFooterSlot" slot-scope="row">
+        <el-button v-if="showBtn" type="success" @click="updateRequest(row)">按此模板新建</el-button>
+      </template>
+
+    </d2-crud-x>
   </div>
 </template>
 
 <script>
-import Pagination from '@/components/Pagination/index.vue'
-import qs from 'qs'
+import { crudOptions } from './crud' // 上文的crudOptions配置
+import { d2CrudPlus } from 'd2-crud-plus'
+import { AddObj, GetList, UpdateObj, DelObj } from './api'
 import { getToken } from '@/utils/auth'
-import RightToolbar from '@/components/RightToolbar'
+import { mapGetters } from 'vuex'
+import qs from 'qs'
+import ResultPage from '../result/index'
 
 export default {
-  components: { RightToolbar, Pagination },
+  name: 'TestCasePage',
+  components: { ResultPage },
+  mixins: [d2CrudPlus.crud], // 最核心部分，继承d2CrudPlus.crud
   data() {
     return {
-      // 显示搜索条件
-      showSearch: true,
-      addFormVisible: false,
-      executionFormVisible: false,
-      resultFormVisible: false,
-      problemFormVisible: false,
-      total: 0,
-      listQuery: {
-        page: 1,
-        limit: 10
+      options: [],
+      caseMark: '选择能力点后生成',
+      itemMark: '选择能力点后生成',
+      classificationMark: '选择能力点后生成',
+      value: '',
+      showBtn: false,
+      dialogFormVisible: false,
+      testDescriptionPic: 'http://localhost:8090/image/a.png'
+      // myHeaders: {
+      //   'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+      // }
+    }
+  },
+  computed: {
+    ...mapGetters([
+      'currentItem'
+    ])
+  },
+  mounted() {
+    this.axios({
+      headers: {
+        'Authorization': getToken()
       },
-      treeData: [{
-        'id': '1',
-        'label': '大分类1',
-        'children': [
-          {
-            'id': '2',
-            'label': '中分类2'
-          },
-          {
-            'id': '3',
-            'label': '中分类3'
-          },
-          {
-            'id': '4',
-            'label': '中分类4',
-            'children': [
-              {
-                'id': '5',
-                'label': '小分类5'
-              }
-            ]
-          }
-        ]
-      }],
-      filterText: '',
-      list: [],
-      defaultProps: {
-        children: 'children',
-        label: 'label'
-      }
-    }
-  },
-  watch: {
-    filterText(val) {
-      this.$refs.tree2.filter(val)
-    }
-  },
-  created() {
-    this.fetchData()
+      method: 'get',
+      url: process.env.VUE_APP_BASE_API + '/dict/abilities?currentItem=' + this.currentItem
+    }).then(response => {
+      this.options = response.data.data
+      // this.testDescriptionPic = '@/views/system/test_descriptions/avatar.png'
+    })
   },
   methods: {
-    filterNode(value, data) {
-      if (!value) return true
-      return data.label.indexOf(value) !== -1
-    },
-    fetchData() {
-      var vm = this
+    generateMark() {
       this.axios({
         headers: {
           'Authorization': getToken()
         },
         method: 'post',
-        url: process.env.VUE_APP_BASE_API + '/system/item/pageInfo',
+        url: process.env.VUE_APP_BASE_API + '/system/mark/generateMark',
         data: qs.stringify({
-          pageNum: vm.listQuery.page,
-          pageSize: vm.listQuery.limit
+          itemName: this.currentItem,
+          currentAbility: this.value
         })
-      }).then(function(resp) {
-        vm.total = resp.data.data.total
-        vm.list = resp.data.data.list
+      }).then(response => {
+        this.caseMark = response.data.message
+        var cMark = this.caseMark
+        if (cMark !== '') {
+          var inp1 = document.querySelector('#txtCaseMark')
+          inp1.value = cMark
+          inp1.dispatchEvent(new Event('input'))
+          var inp2 = document.querySelector('#txtItemMark')
+          inp2.value = cMark.slice(0, 4)
+          inp2.dispatchEvent(new Event('input'))
+          var inp3 = document.querySelector('#txtClassMark')
+          inp3.value = cMark.slice(0, cMark.lastIndexOf('-'))
+          inp3.dispatchEvent(new Event('input'))
+        }
       })
     },
-    handleAdd() {
-      this.addFormVisible = true
+    getCrudOptions() { return crudOptions(this) },
+    pageRequest(query) { return GetList(query) }, // 数据请求
+    addRequest(row) { return AddObj(row) }, // 添加请求
+    updateRequest(row) { return UpdateObj(row) }, // 修改请求
+    delRequest(row) { return DelObj(row.id) }, // 删除请求,
+    // handleCreate(row) {
+    //   this.$refs.resultPage.showAddDialog()
+    // },
+    recordCase() {
+      this.axios({
+        headers: {
+          'Authorization': getToken()
+        },
+        method: 'post',
+        url: process.env.VUE_APP_BASE_API + '/system/result/recordMark',
+        data: qs.stringify({
+          caseMark: this.$refs.d2Crud.d2CrudData[0].id,
+          itemMark: this.$refs.d2Crud.d2CrudData[0].itemMark,
+          problemMark: this.$refs.d2Crud.d2CrudData[0].caseMark
+        })
+      })
     },
-    handleExecution() {
-      this.executionFormVisible = true
-    },
+    // handleCreate(row) {
+    //   this.showBtn = true
+    //   this.$refs.d2Crud.showDialog({
+    //     mode: 'edit'
+    //   })
+    //   this.updateRequest(row)
+    //   this.showBtn = false
+    // },
     handleResult() {
-      this.resultFormVisible = true
-    },
-    handleProblem() {
-      this.problemFormVisible = true
-    },
-    handleDelete(row) {
-      var vm = this
-      this.axios({
-        headers: {
-          'Authorization': getToken()
-        },
-        method: 'post',
-        url: 'http://localhost:8090/system/item/delete',
-        data: qs.stringify({
-          id: row.id
-        })
-      }).then(function(resp) {
-        vm.total = resp.data.data.total
-        vm.list = resp.data.data.list
-      })
-    },
-    cancelForm() {
-      this.addFormVisible = false
-      this.executionFormVisible = false
-      this.resultFormVisible = false
-      this.problemFormVisible = false
+      this.dialogFormVisible = true
+      this.recordCase()
     }
   }
 }
 </script>
-
 <style>
 
+#resultDialog {
+  width: 1200px;
+  height: 400px;
+  text-align: left;
+  margin:200px 400px 200px 300px;
+}
 .el-table__body-wrapper::-webkit-scrollbar {
   width: 10px;
   height: 10px;
